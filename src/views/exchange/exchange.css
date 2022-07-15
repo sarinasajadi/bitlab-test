@@ -1,0 +1,36 @@
+.ExchangeFeesContainer{
+    position: relative;
+    height: 85px;
+}
+.ExchangeFeesContainer .Timeline {
+    position: absolute;
+    top: -31px;
+    left: -31px;
+}
+.ExchangeFeesContainer .Timeline, .ExchangeFeesContainer .ExchangeFees {
+    display: inline;
+}
+.ExchangeFeesContainer .ExchangeFees .Fees {
+    display: inline-block;
+    padding: 6px;
+}
+.ExchangeFeesContainer .ExchangeFees{
+    position: absolute;
+    left: 45px;
+    top: 23px;
+    border: 1px solid #ddd;
+}
+
+.ExchangeFeesContainer .Timeline .css-1ami7lv-MuiTimelineConnector-root{
+    height: 53px;
+}
+.Exchange {
+    margin-top: 30px;
+}
+.Exchange .MuiCardContent-root {
+    padding-right: 30px;
+}
+.Exchange .MuiAlert-standardError {
+    margin: 15px 0 0 15px;
+  }
+  
