@@ -24,6 +24,6 @@ export interface QuoteError {
 }
 
 export interface QuoteState {
-  paidAmount?: string;
-  receivedAmount?: string;
+  source_amount?: string;
+  target_amount?: string;
 }

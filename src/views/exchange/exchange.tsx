@@ -12,57 +12,59 @@ import { QuotesRequest, QuotesResponse, QuoteState } from '../../types/Quotes';
 import './exchange.css';
 
 
-
 const Exchange = () => {
     const [values, setValues] = useState<QuoteState>({
-        paidAmount: '100',
-        receivedAmount: '',
+        source_amount: '100',
+        target_amount: '',
     });
 
     const [requestQuote, setRequestQuote] = useState<QuotesRequest>({
         source_currency: 'USD',
         target_crypto_asset_id: 'b2384bf2-b14d-4916-aa97-85633ef05742',
-        source_amount: values.paidAmount,
-        target_amount: values.receivedAmount,
+        source_amount: values.source_amount,
+        target_amount: values.target_amount,
     });
 
     useEffect(() => {
-        if (values.receivedAmount) {
-            setRequestQuote({...requestQuote, source_amount: undefined, target_amount: values.receivedAmount});
+        if (values.source_amount) {
+            setRequestQuote({...requestQuote, source_amount: values.source_amount, target_amount: undefined});
         }
-    }, [values.receivedAmount])
-
-    useEffect(() => {
-        if (values.paidAmount) {
-            setRequestQuote({...requestQuote, source_amount: values.paidAmount, target_amount: undefined});
-        }
-    }, [values.paidAmount])
+    }, [])
 
     const quoteResponse : QuotesResponse = useAPIHandler('quotes', requestQuote)
 
     useEffect(() => {
         if (quoteResponse?.id) {
-            setValues({...values, paidAmount: quoteResponse?.source_amount, receivedAmount: quoteResponse?.target_amount });
+            setValues({...values, source_amount: quoteResponse?.source_amount, target_amount: quoteResponse?.target_amount });
         }
         if (quoteResponse?.error) {
-            setValues({...values, paidAmount: '', receivedAmount: '' });
+            setValues({...values, source_amount: '', target_amount: '' });
         }
     }, [quoteResponse])
 
     const handleChange = (prop: keyof QuoteState) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
+      const _requestQuote = {...requestQuote}
+      if (event.target.value) {
+        _requestQuote.source_amount = undefined;
+        _requestQuote.target_amount = undefined;
+        setRequestQuote({..._requestQuote, [prop]: event.target.value});
+      } else {
+        //For handling the time when input is cleared  
+        setRequestQuote({...requestQuote});
+      }
     };
 
     return (
         <div className='Exchange'>
-            <Card sx={{ minWidth: 500 }}>
+            <Card sx={{ width: 500 }}>
                 <CardContent>
                     <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="paidAmount">You Pay</InputLabel>
+                        <InputLabel htmlFor="sourceAmount">You Pay</InputLabel>
                         <OutlinedInput
-                            id="paidAmount"
-                            value={values.paidAmount}
-                            onChange={handleChange('paidAmount')}
+                            id="sourceAmount"
+                            value={values.source_amount}
+                            onChange={handleChange('source_amount')}
                             endAdornment={<InputAdornment position="end">USD</InputAdornment>}
                             label="Paid Amount"
                         />
@@ -103,11 +105,11 @@ const Exchange = () => {
                         </div>
                     )}
                     <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="receivedAmount">You Receive</InputLabel>
+                        <InputLabel htmlFor="targetAmount">You Receive</InputLabel>
                         <OutlinedInput
-                            id="receivedAmount"
-                            value={values.receivedAmount}
-                            onChange={handleChange('receivedAmount')}
+                            id="targetAmount"
+                            value={values.target_amount}
+                            onChange={handleChange('target_amount')}
                             endAdornment={<InputAdornment position="end">USDC EVMOS</InputAdornment>}
                             label="Received Amount"
                         />
